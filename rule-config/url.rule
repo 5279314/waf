@@ -1,0 +1,8 @@
+\.(htaccess|bash_history)
+\.(bak|inc|old|mdb|sql|backup|java|class|tgz|gz|tar|zip)$
+(phpmyadmin|jmx-console|admin-console|jmxinvokerservlet)
+java\.lang
+\.svn\/
+\.git\/
+/(attachments|upimg|images|css|uploadfiles|html|uploads|templets|static|template|data|inc|forumdata|upload|includes|cache|avatar)/(\\w+).(php|jsp)
+(?:etc\/\W*passwd)
