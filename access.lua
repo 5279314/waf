@@ -1,4 +1,5 @@
-require 'init'
+--require 'init'
+local init = require("init")
 
 function waf_main()
     if white_ip_check() then

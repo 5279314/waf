@@ -1,6 +1,11 @@
 --WAF Action
-require 'config'
-require 'lib'
+--require 'config'
+--require 'lib'
+--package.path = package.path .. ";/application/nginx-1.24/conf/waf/?.lua"
+local script_dir = debug.getinfo(1, "S").source:match("@(.*/)") or "."
+package.path = package.path .. ";" .. script_dir .. "/waf/?.lua"
+local config = require("config")
+local config = require("lib")
 
 --args
 local rulematch = ngx.re.find
@@ -147,14 +152,16 @@ end
 function user_agent_attack_check()
     if config_user_agent_check == "on" then
         local USER_AGENT_RULES = get_rule('useragent.rule')
-        local USER_AGENT = ngx.var.http_user_agent
-        if USER_AGENT ~= nil then
-            for _,rule in pairs(USER_AGENT_RULES) do
-                if rule ~="" and rulematch(USER_AGENT,rule,"jo") then
-                    log_record('Deny_USER_AGENT',ngx.var.request_uri,"-",rule)
-                    if config_waf_enable == "on" then
-                        waf_output()
-                        return true
+        if USER_AGENT_RULES ~= nil then  -- 添加这个检查
+            local USER_AGENT = ngx.var.http_user_agent
+            if USER_AGENT ~= nil then
+                for _, rule in pairs(USER_AGENT_RULES) do
+                    if rule ~= "" and rulematch(USER_AGENT, rule, "jo") then
+                        log_record('Deny_USER_AGENT', ngx.var.request_uri, "-", rule)
+                        if config_waf_enable == "on" then
+                            waf_output()
+                            return true
+                        end
                     end
                 end
             end
