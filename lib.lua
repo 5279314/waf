@@ -1,4 +1,5 @@
 --waf core lib
+local script_dir = debug.getinfo(1, "S").source:match("@(.*/)") or "."
 require 'config'
 
 --Get the client IP
@@ -28,7 +29,7 @@ end
 --Get WAF rule
 function get_rule(rulefilename)
     local io = require 'io'
-    local RULE_PATH = config_rule_dir
+    local RULE_PATH = script_dir .. config_rule_dir
     local RULE_FILE = io.open(RULE_PATH..'/'..rulefilename,"r")
     if RULE_FILE == nil then
         return
