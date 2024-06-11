@@ -2,8 +2,7 @@
 --require 'config'
 --require 'lib'
 --package.path = package.path .. ";/application/nginx-1.24/conf/waf/?.lua"
-local script_dir = debug.getinfo(1, "S").source:match("@(.*/)") or "."
-package.path = package.path .. ";" .. script_dir .. "/waf/?.lua"
+package.path = package.path .. ";./waf/?.lua"
 local config = require("config")
 local config = require("lib")
 
