@@ -1,10 +1,28 @@
---WAF Action
---require 'config'
---require 'lib'
---package.path = package.path .. ";/application/nginx-1.24/conf/waf/?.lua"
-package.path = package.path .. ";./waf/?.lua"
+-- WAF Action
+-- Define a function to get Nginx conf path
+local function get_nginx_conf_path()
+    local handle = io.popen("nginx -V 2>&1")
+    local result = handle:read("*a")
+    handle:close()
+    
+    local conf_path = result:match("configure arguments: .-%s-%s*%-prefix%s*=%s*([^%s]+)")
+    if conf_path then
+        return conf_path .. "/conf"
+    end
+    
+    return nil
+end
+
+-- Get Nginx conf path and waf path
+local conf_path = get_nginx_conf_path()
+local waf_path = conf_path and conf_path .. "/waf" or "./waf"
+
+-- Update package.path
+package.path = package.path .. ";" .. waf_path .. "/?.lua"
+
+-- Load config and lib modules
 local config = require("config")
-local config = require("lib")
+local lib = require("lib")
 
 --args
 local rulematch = ngx.re.find
